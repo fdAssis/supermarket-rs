@@ -1,18 +1,18 @@
-use super::types;
-use crate::product::Product;
+use super::types::Types;
+use crate::Product;
 
 #[derive(Debug)]
 pub struct User {
-  user_type: types::Types,
+  user_type: Types,
   name: String,
   balance: f32,
   cart: Vec<Product>,
 }
 
 impl User {
-  pub fn new(user_type: types::Types, name: String, balance: f32) -> User {
+  pub fn new(name: String, balance: f32) -> Self {
     User {
-      user_type,
+      user_type: Types::USER,
       name,
       balance,
       cart: Vec::new(),
@@ -56,5 +56,19 @@ impl User {
     );
 
     self.cart.push(product);
+  }
+}
+
+pub struct Admin {
+  user_type: Types,
+  name: String,
+}
+
+impl Admin {
+  pub fn new(name: String) -> Self {
+    Self {
+      name,
+      user_type: Types::ADMIN,
+    }
   }
 }
