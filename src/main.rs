@@ -34,5 +34,8 @@ fn main() {
 
     store.add_product(product_1);
     store.add_product(product_2);
+
+    user_1.add_product_in_cart(&store.get_products()[0], 10);
+    user_1.user_info();
     store.show_store();
 }
