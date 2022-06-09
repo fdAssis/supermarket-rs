@@ -1,7 +1,9 @@
 use super::types::Types;
+use crate::actions::transfer_type::Transfer::{DEPOSIT, WITHDRAW};
+use crate::actions::{transfer_type::Transfer, user_actions};
 use crate::Product;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct User {
   user_type: Types,
   name: String,
@@ -19,6 +21,15 @@ impl User {
     }
   }
 
+  pub fn get_name(&self) -> String {
+    self.name.clone()
+  }
+  pub fn get_type(&self) -> Types {
+    self.user_type
+  }
+  pub fn get_cart(&self) -> Vec<Product> {
+    self.cart.clone()
+  }
   pub fn get_balance(&self) -> f32 {
     self.balance
   }
@@ -27,48 +38,14 @@ impl User {
     self.balance = value;
   }
 
-  pub fn get_cart(&self) -> Vec<Product> {
-    self.cart.clone()
+  pub fn update_balace(&mut self, value: f32, transfer_type: Transfer) {
+    match transfer_type {
+      DEPOSIT => user_actions::_deposit(self, value),
+      WITHDRAW => user_actions::_withdraw(self, value),
+    }
   }
 
   pub fn user_info(&self) {
-    println!("\t------ User Info ------");
-    println!("\tname: {}", self.name);
-    println!("\tbalance: {}", self.balance);
-    println!("\tuser type: {:?}", self.user_type);
-    println!("\tcart: {:#?}", self.cart);
-  }
-
-  pub fn add_product_in_cart(&mut self, product: &Product, quantity: u32) {
-    for i in 0..self.cart.len() {
-      if self.cart[i].get_id().eq(&product.get_id()) {
-        let old_quantity: u32 = self.cart[i].get_quantity();
-        self.cart[i].set_quantity(old_quantity + quantity);
-        return;
-      }
-    }
-
-    let product = Product::new(
-      product.get_id(),
-      product.get_name(),
-      product.get_price(),
-      quantity,
-    );
-
-    self.cart.push(product);
-  }
-}
-
-pub struct Admin {
-  user_type: Types,
-  name: String,
-}
-
-impl Admin {
-  pub fn new(name: String) -> Self {
-    Self {
-      name,
-      user_type: Types::ADMIN,
-    }
+    user_actions::_user_info(self);
   }
 }
